@@ -1,0 +1,32 @@
+{
+    "name": "tradesafe/mt942",
+    "description": "Process statements using the MT 942 spec (https://www2.swift.com/knowledgecentre/publications/usgf_20190719/2.0?topic=rsc_olh_mt942.htm)",
+    "type": "library",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/tradesafe/php-mt942/issues",
+        "source": "https://github.com/tradesafe/php-mt942"
+    },
+    "authors": [
+        {
+            "name": "Richard Banks",
+            "email": "richard.banks@tradesafe.co.za"
+        }
+    ],
+    "version": "0.0.1",
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "TradeSafe\\Mt942\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TradeSafe\\Mt942\\Tests\\": "tests/"
+        }
+    },
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^8.4|^9.0"
+    }
+}

@@ -50,11 +50,13 @@ class Parser
         }
 
         // Merge information lines into statement data
-        foreach ($output['information_lines'] as $key => $value) {
-            $output['lines'][$key]['information'][] = $value;
-        }
+        if (isset($output['information_lines'])) {
+            foreach ($output['information_lines'] as $key => $value) {
+                $output['lines'][$key]['information'][] = $value;
+            }
 
-        unset($output['information_lines']);
+            unset($output['information_lines']);
+        }
 
         return [
             'block1' => $matches[0]['block1'],

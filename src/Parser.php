@@ -160,7 +160,7 @@ class Parser
                 $statement++; // Increment count before processing line. :86: Messages are out of sync otherwise
                 $key = 'lines';
 
-                preg_match('/(?<value_year>[0-9]{2})(?<value_month>[0-9]{2})(?<value_day>[0-9]{2})(?<entry_month>[0-9]{0,2})(?<entry_day>[0-9]{0,2})(?<indicator>[A-Z]{1})(?<funds_code>[A-Z]{1})?(?<amount>[0-9,]{1,15})(?<code>[A-Z0-9]{4})(?<customer_ref>[a-zA-Z0-9 ]{1,16})\/\/(?<institution_ref>[A-Z]{0,16})\n?(?<details>[0-9A-Z ]{0,34})?/s', $message, $matches, PREG_UNMATCHED_AS_NULL);
+                preg_match('/(?<value_year>[0-9]{2})(?<value_month>[0-9]{2})(?<value_day>[0-9]{2})(?<entry_month>[0-9]{0,2})(?<entry_day>[0-9]{0,2})(?<indicator>[A-Z]{1})(?<funds_code>[A-Z]{1})?(?<amount>[0-9,]{1,15})(?<code>[A-Z0-9]{4})(?<customer_ref>[a-zA-Z0-9- ]{1,16})\/\/(?<institution_ref>[A-Z]{0,16})\n?(?<details>[0-9A-Z- ]{0,34})?/s', $message, $matches, PREG_UNMATCHED_AS_NULL);
 
                 $parsed_message = [];
                 $parsed_message[$statement] = [

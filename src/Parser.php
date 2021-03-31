@@ -176,7 +176,7 @@ class Parser
                     'timestamp' => $timestamp,
                     'date' => date('c', $timestamp),
                     'currency' => $matches['currency'],
-                    'amount' => $matches['amount'],
+                    'amount' => str_replace(',', '.', $matches['amount']),
                 ];
 
                 break;
@@ -194,7 +194,7 @@ class Parser
                     'timestamp' => $timestamp,
                     'date' => date('c', $timestamp),
                     'currency' => $matches['currency'],
-                    'amount' => $matches['amount'],
+                    'amount' => str_replace(',', '.', $matches['amount']),
                 ];
 
                 break;

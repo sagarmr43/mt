@@ -20,12 +20,21 @@ class Parser
     /**
      * @return array
      */
-    public function process_statement()
+    public function process_statement($headers = true)
     {
-        // Split message blocks 1, 2 & 4
-        preg_match_all('/{1:(?<block1>[0-9A-Z]+)}{2:(?<block2>[0-9A-Z]+)}{4:(?<body>.*)-}/s', $this->document, $matches, PREG_SET_ORDER);
+        $block1 = null;
+        $block2 = null;
 
-        $body = trim($matches[0]['body']);
+        if ($headers) {
+            // Split message blocks 1, 2 & 4
+            preg_match_all('/{1:(?<block1>[0-9A-Z]+)}{2:(?<block2>[0-9A-Z]+)}{4:(?<body>.*)-}/s', $this->document, $matches, PREG_SET_ORDER);
+            $body = trim($matches[0]['body']);
+            $block1 = $matches[0]['block1'];
+            $block2 = $matches[0]['block2'];
+        } else {
+            $body = $this->document;
+        }
+
         $lines = explode(PHP_EOL, $body);
         $lines = array_map('trim', $lines);
 
@@ -59,8 +68,8 @@ class Parser
         }
 
         return [
-            'block1' => $matches[0]['block1'],
-            'block2' => $matches[0]['block2'],
+            'block1' => $block1,
+            'block2' => $block2,
             'block4' => $output
         ];
     }

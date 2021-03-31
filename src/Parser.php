@@ -155,12 +155,48 @@ class Parser
 
                 preg_match('/(?<year>[0-9]{2})(?<month>[0-9]{2})(?<day>[0-9]{2})(?<hours>[0-9]{2})(?<minutes>[0-9]{2})\+(?<offset>[0-9]{4})/s', $message, $matches, PREG_UNMATCHED_AS_NULL);
 
-                $timestamp = mktime($matches['hours'], $matches['minutes'], 0, $matches['month'] , $matches['day'], $matches['year']);
+                $timestamp = mktime($matches['hours'], $matches['minutes'], 0, $matches['month'], $matches['day'], $matches['year']);
 
                 $parsed_message = [
                     'timestamp' => $timestamp,
                     'date' => date('c', $timestamp)
                 ];
+                break;
+            // Opening Balance | 1!a6!n3!a15d – D/C | Date | Currency | Amount
+            case '60F':
+            case '60M':
+                $key = 'opening_balance';
+
+                preg_match('/(?<type>[DC])(?<year>[0-9]{2})(?<month>[0-9]{2})(?<day>[0-9]{2})(?<currency>[A-Z]{3})(?<amount>[0-9]+(\,[0-9][0-9]?)?)/s', $message, $matches, PREG_UNMATCHED_AS_NULL);
+
+                $timestamp = mktime(0, 0, 0, $matches['month'], $matches['day'], $matches['year']);
+
+                $parsed_message = [
+                    'type' => $matches['type'],
+                    'timestamp' => $timestamp,
+                    'date' => date('c', $timestamp),
+                    'currency' => $matches['currency'],
+                    'amount' => $matches['amount'],
+                ];
+
+                break;
+            // Closing Balance | 1!a6!n3!a15d – D/C | Date | Currency | Amount
+            case '62F':
+            case '62M':
+                $key = 'closing_balance';
+
+                preg_match('/(?<type>[DC])(?<year>[0-9]{2})(?<month>[0-9]{2})(?<day>[0-9]{2})(?<currency>[A-Z]{3})(?<amount>[0-9]+(\,[0-9][0-9]?)?)/s', $message, $matches, PREG_UNMATCHED_AS_NULL);
+
+                $timestamp = mktime(23, 59, 59, $matches['month'], $matches['day'], $matches['year']);
+
+                $parsed_message = [
+                    'type' => $matches['type'],
+                    'timestamp' => $timestamp,
+                    'date' => date('c', $timestamp),
+                    'currency' => $matches['currency'],
+                    'amount' => $matches['amount'],
+                ];
+
                 break;
             // Statement (Transaction) Line |
             // 6!n[4!n]2a[1!a]15d1!a3!c16x[//16x]

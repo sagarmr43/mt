@@ -67,6 +67,23 @@ class Parser
             unset($output['information_lines']);
         }
 
+        // Group data by fingerprint
+        $linesByFingerprint = [];
+        foreach ($output['lines'] as $row) {
+            $linesByFingerprint[$row['fingerprint']][] = $row;
+        }
+
+        // Update fingerprint to include the array key to differentiate duplicate payments
+        $newStatementLines = [];
+        foreach ($linesByFingerprint as $hash => $batch) {
+            foreach ($batch as $key => $line) {
+                $line['fingerprint'] = $hash .'-' . $key;
+                $newStatementLines[] = $line;
+            }
+        }
+
+        $output['lines'] = $newStatementLines;
+
         return [
             'block1' => $block1,
             'block2' => $block2,
@@ -221,6 +238,17 @@ class Parser
                     'institution_ref' => $matches['institution_ref'],
                     'details' => $matches['details'],
                 ];
+
+                // Create fingerprint of line to help with duplicate data
+                $parsed_message[$statement]['fingerprint'] = sha1(sprintf('%s%s%s-%s-%s-%s',
+                    $parsed_message[$statement]['year'],
+                    $parsed_message[$statement]['month'],
+                    $parsed_message[$statement]['day'],
+                    $parsed_message[$statement]['indicator'],
+                    $parsed_message[$statement]['amount'],
+                    trim($parsed_message[$statement]['customer_ref'])
+                ));
+
                 break;
             // Information to Account Owner | 6*65x
             case '86':

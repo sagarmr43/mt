@@ -67,22 +67,24 @@ class Parser
             unset($output['information_lines']);
         }
 
-        // Group data by fingerprint
-        $linesByFingerprint = [];
-        foreach ($output['lines'] as $row) {
-            $linesByFingerprint[$row['fingerprint']][] = $row;
-        }
-
-        // Update fingerprint to include the array key to differentiate duplicate payments
-        $newStatementLines = [];
-        foreach ($linesByFingerprint as $hash => $batch) {
-            foreach ($batch as $key => $line) {
-                $line['fingerprint'] = $hash .'-' . $key;
-                $newStatementLines[] = $line;
+        if (!empty($output['lines'])) {
+            // Group data by fingerprint
+            $linesByFingerprint = [];
+            foreach ($output['lines'] as $row) {
+                $linesByFingerprint[$row['fingerprint']][] = $row;
             }
-        }
 
-        $output['lines'] = $newStatementLines;
+            // Update fingerprint to include the array key to differentiate duplicate payments
+            $newStatementLines = [];
+            foreach ($linesByFingerprint as $hash => $batch) {
+                foreach ($batch as $key => $line) {
+                    $line['fingerprint'] = $hash .'-' . $key;
+                    $newStatementLines[] = $line;
+                }
+            }
+
+            $output['lines'] = $newStatementLines;
+        }
 
         return [
             'block1' => $block1,
